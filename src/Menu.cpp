@@ -11,10 +11,10 @@ void Menu::run() {
     std::string err;
     std::vector<Book> loaded;
     if (!FileIO::load(dataFile, loaded, err)) {
-        std::cout << "[!] Ошибка загрузки файла: " << err << "\n";
+        std::cout << "!Ошибка загрузки файла!: " << err << "\n";
     } else {
         library.setAll(loaded);
-        std::cout << "[i] Загружено книг: " << loaded.size() << "\n";
+        std::cout << "Загружено книг: " << loaded.size() << "\n";
     }
 
     bool running = true;
@@ -32,12 +32,12 @@ void Menu::run() {
             case 7: analyticsMenu(); break;
             case 8: saveToFile(); break;
             case 0: running = false; break;
-            default: std::cout << "[!] Неизвестный пункт меню.\n";
+            default: std::cout << "!Неизвестный пункт меню!\n";
         }
     }
 
     if (modified) {
-        std::cout << "\n[!] Есть несохранённые изменения.\n";
+        std::cout << "\n!Есть несохранённые изменения!\n";
         std::string ans = Utf8::readLine("Сохранить перед выходом? (y/n): ");
         if (ans == "y" || ans == "Y" || ans == "д" || ans == "Д") {
             saveToFile();
@@ -88,18 +88,18 @@ void Menu::addBook() {
     Book b(id, title, author, genre, year, copies, price);
     std::string err;
     if (!library.addBook(b, err)) {
-        std::cout << "[!] " << err << "\n";
+        std::cout << "!Ошибка!" << err << "\n";
         return;
     }
     modified = true;
-    std::cout << "[+] Книга успешно добавлена.\n";
+    std::cout << "Книга успешно добавлена.\n";
 }
 
 void Menu::editBook() {
     int id = Utf8::readInt("Введите ID книги для редактирования: ");
     const Book* existing = library.findById(id);
     if (!existing) {
-        std::cout << "[!] Книга с таким ID не найдена.\n";
+        std::cout << "!Книга с таким ID не найдена!\n";
         return;
     }
 
@@ -123,28 +123,28 @@ void Menu::editBook() {
     s = Utf8::readLine("Год издания [" + std::to_string(existing->year) + "]: ");
     if (!s.empty()) {
         try { newData.year = std::stoi(s); }
-        catch (...) { std::cout << "[!] Некорректное значение, оставляем старое.\n"; }
+        catch (...) { std::cout << "!Некорректное значение, оставляем старое!\n"; }
     }
     
     s = Utf8::readLine("Количество [" + std::to_string(existing->copies) + "]: ");
     if (!s.empty()) {
         try { newData.copies = std::stoi(s); }
-        catch (...) { std::cout << "[!] Некорректное значение, оставляем старое.\n"; }
+        catch (...) { std::cout << "!Некорректное значение, оставляем старое!\n"; }
     }
     
     s = Utf8::readLine("Цена [" + std::to_string(existing->price) + "]: ");
     if (!s.empty()) {
         try { newData.price = std::stod(s); }
-        catch (...) { std::cout << "[!] Некорректное значение, оставляем старое.\n"; }
+        catch (...) { std::cout << "!Некорректное значение, оставляем старое!\n"; }
     }
 
     std::string err;
     if (!library.editBook(id, newData, err)) {
-        std::cout << "[!] " << err << "\n";
+        std::cout << "!Ошибка!" << err << "\n";
         return;
     }
     modified = true;
-    std::cout << "[+] Книга обновлена.\n";
+    std::cout << "Книга обновлена.\n";
 }
 
 void Menu::removeBook() {
@@ -155,20 +155,20 @@ void Menu::removeBook() {
         int id = Utf8::readInt("ID: ");
         if (library.removeById(id, err)) {
             modified = true;
-            std::cout << "[+] Книга удалена.\n";
+            std::cout << "Книга удалена.\n";
         } else {
-            std::cout << "[!] " << err << "\n";
+            std::cout << "!Ошибка!" << err << "\n";
         }
     } else if (mode == 2) {
         std::string title = Utf8::readLine("Название: ");
         if (library.removeByTitle(title, err)) {
             modified = true;
-            std::cout << "[+] Книга удалена.\n";
+            std::cout << "Книга удалена.\n";
         } else {
-            std::cout << "[!] " << err << "\n";
+            std::cout << "!Ошибка! " << err << "\n";
         }
     } else {
-        std::cout << "[!] Неверный выбор.\n";
+        std::cout << "!Неверный выбор!\n";
     }
 }
 
@@ -200,7 +200,7 @@ void Menu::searchMenu() {
         double mx = Utf8::readDouble("Цена до: ");
         result = library.searchByPriceRange(mn, mx);
     } else {
-        std::cout << "[!] Неверный выбор.\n";
+        std::cout << "!Неверный выбор!\n";
         return;
     }
 
@@ -229,10 +229,10 @@ void Menu::sortMenu() {
         case 4: library.sortByCopies(false); break;
         case 5: library.sortByTitle(true); break;
         case 6: library.sortByAuthor(true); break;
-        default: std::cout << "[!] Неверный выбор.\n"; return;
+        default: std::cout << "!Неверный выбор!\n"; return;
     }
     modified = true;
-    std::cout << "[+] Отсортировано. Текущий список:\n";
+    std::cout << "Отсортировано. Текущий список:\n";
     showAll();
 }
 
@@ -260,8 +260,8 @@ void Menu::saveToFile() {
     std::string err;
     if (FileIO::save(dataFile, library.getAll(), err)) {
         modified = false;
-        std::cout << "[+] Данные сохранены в " << dataFile << "\n";
+        std::cout << "Данные сохранены в " << dataFile << "\n";
     } else {
-        std::cout << "[!] Ошибка сохранения: " << err << "\n";
+        std::cout << "Ошибка сохранения: " << err << "\n";
     }
 }
